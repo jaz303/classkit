@@ -11,11 +11,11 @@ How I make classes. Sometimes.
         // this is the Person constructor
         function(name) {
           this.name = name;
-        }
+        },
       
         'methods', {
           greet: function() {
-            console.log("I am " + this.name);
+            return "I am " + this.name;
           }
         }
       
@@ -35,7 +35,8 @@ How I make classes. Sometimes.
 
         'methods', {
           greet: function() {
-            console.log("GET OUT OF MY WAY, " + _super.greet.call(this));
+            return "GET OUT OF MY WAY, " + _super.greet.call(this);
+            console.log();
           }
         }
 
@@ -43,5 +44,5 @@ How I make classes. Sometimes.
 
     });
 
-    (new Person('Jason')).greet();
-    (new RudePerson('Bob')).greet();
+    console.log((new Person('Jason')).greet());
+    console.log((new RudePerson('Bob')).greet());

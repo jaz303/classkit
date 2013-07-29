@@ -1,0 +1,16 @@
+{
+  "name": "classkit",
+  "version": "0.0.1",
+  "description": "class-like inheritance if you're into that sort of thing",
+  "main": "index.js",
+  "keywords": [
+    "class",
+    "inheritance"
+  ],
+  "author": "Jason Frame <jason@onehackoranother.com> (jasonframe.co.uk)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaz303/classkit.git"
+  }
+}

@@ -11,8 +11,8 @@ Base.prototype.lateBoundMethod = function(name) {
 }
 
 Base.extend = function(fn) {
-  
-  var features = fn(this, this.prototype);
+
+  var features = fn ? fn(this, this.prototype) : [function() {}];
   
   var ctor = features[0];
   ctor.prototype = Object.create(this.prototype);

@@ -2,7 +2,7 @@
 
 How I make classes. Sometimes.
 
-Call `Base.extend`, passing a callback function that returns a class descriptor. A class descriptor is an array whose first element is the class constructor and sucessive values are interpreted as pairs of feature names/parameters.
+Call `Base.extend`, passing a callback function that returns a class descriptor, an array whose first element is the class constructor and whose successive values are interpreted as pairs of feature names/parameters.
 
 ## Simple Usage
 

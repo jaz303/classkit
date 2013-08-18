@@ -2,11 +2,11 @@
 
 How I make classes. Sometimes.
 
-Call `Base.extend`, passing a callback function that returns a class descriptor, an array whose first element is the class constructor and whose successive values are interpreted as pairs of feature names/parameters.
+Call `Class.extend`, passing a callback function that returns a class descriptor, an array whose first element is the class constructor and whose successive values are interpreted as pairs of feature names/parameters.
 
 ## Simple Usage
 
-    var Person = Base.extend(function() {
+    var Person = Class.extend(function() {
 
       return [
 
@@ -53,7 +53,7 @@ Call `Base.extend`, passing a callback function that returns a class descriptor,
 
 Subclasses can define new `Features`. A `Feature` is simply a function that receives the class constructor and some configuration data as parameters and then effects change on the new class' prototype. Here's an example that auto-generates getters and setters:
 
-    var PropertyObject = Base.extend();
+    var PropertyObject = Class.extend();
 
     function makeProperty(proto, name, value) {
       var suffix = name.charAt(0).toUpperCase() + name.substring(1);

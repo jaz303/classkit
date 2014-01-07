@@ -1,6 +1,6 @@
 {
   "name": "classkit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "class-like inheritance if you're into that sort of thing",
   "main": "index.js",
   "keywords": [

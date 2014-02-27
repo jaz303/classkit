@@ -33,6 +33,9 @@ Class.Features = {
     for (var methodName in methods) {
       ctor.prototype[methodName] = methods[methodName];
     }
+  },
+  properties: function(ctor, properties) {
+    Object.defineProperties(ctor.prototype, properties);
   }
 };
 

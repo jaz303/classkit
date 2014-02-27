@@ -79,6 +79,29 @@ t("methods", function(assert) {
 
 });
 
+t("properties", function(assert) {
+
+    var A = Class.extend(function() {
+        return [
+            function(val) { this._v = val; },
+            'properties', {
+                value: {
+                    get: function() { return this._v; },
+                    set: function(v) { this._v = v * 10; }
+                }
+            }
+        ];
+    });
+
+    var a = new A(50);
+
+    assert.equal(a.value, 50);
+
+    a.value = 100;
+    assert.equal(a.value, 1000);
+
+});
+
 t("method()", function(assert) {
 
     var A = Class.extend(function() {

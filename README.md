@@ -49,6 +49,36 @@ Call `Class.extend`, passing a callback function that returns a class descriptor
     console.log((new Person('Jason')).greet());
     console.log((new RudePerson('Bob')).greet());
 
+## Delegation
+
+Using the `delegate` feature, classes can automatically generate methods that delegate their behaviour to some other class property.
+
+See:
+
+```javascript
+Class.extend(function() {
+  return [
+    
+    function() {
+      this.events = new EventEmitter();
+    },
+    
+    'delegate', {
+      
+      // 'foo.on' forwards to 'foo.events.on'
+      'on': 'events',
+
+      // 'foo.emit' forwards to 'foo.events.emit'
+      'emit': 'events'
+
+      // 'foo.onceOnly' forwards to 'foo.events.one'
+      'onceOnly': ['events', 'one']
+
+    }
+
+  ];
+});
+
 ## Adding Features
 
 Subclasses can define new `Features`. A `Feature` is simply a function that receives the class constructor and some configuration data as parameters and then effects change on the new class' prototype. Here's an example that auto-generates getters and setters:

@@ -78,6 +78,7 @@ Class.extend(function() {
 
   ];
 });
+```
 
 ## Adding Features
 

@@ -141,3 +141,27 @@ t("lateBoundMethod()", function(assert) {
     assert.equal(m(), 'forgot my name');
 
 });
+
+t("delegation", function(assert) {
+
+    var A = Class.extend(function() {
+        return [
+            function() {
+                this.bar = {
+                    add: function(a, b) { return a + b; },
+                    sub: function(a, b) { return a - b; }
+                }
+            },
+            'delegate', {
+                add: 'bar',
+                minus: ['bar', 'sub']
+            }
+        ]
+    });
+
+    var instance = new A();
+
+    assert.equal(instance.add(10, 5), 15);
+    assert.equal(instance.minus(100, 20), 80);
+
+});

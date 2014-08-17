@@ -1,3 +1,5 @@
+exports.Class = Class;
+
 function Class() {};
   
 Class.prototype.method = function(name) {
@@ -36,7 +38,22 @@ Class.Features = {
   },
   properties: function(ctor, properties) {
     Object.defineProperties(ctor.prototype, properties);
+  },
+  delegate: function(ctor, delegates) {
+    for (var methodName in delegates) {
+      var target = delegates[methodName];
+      if (Array.isArray(target)) {
+        ctor.prototype[methodName] = makeDelegate(target[0], target[1]);
+      } else {
+        ctor.prototype[methodName] = makeDelegate(target, methodName);
+      }
+    }
   }
 };
 
-exports.Class = Class;
+function makeDelegate(member, method) {
+  return function() {
+    var target = this[member];
+    return target[method].apply(target, arguments);
+  }
+}

@@ -26,14 +26,14 @@ Call `Class.extend`, passing a callback function that returns a class descriptor
 
     });
 
-    // when extending classes, super constructor and prototype are passed
+    // when extending classes, super prototype is passed
     // to callback function for capture by closure.
-    var RudePerson = Person.extend(function(_superc, _super) {
+    var RudePerson = Person.extend(function(_super) {
 
       return [
 
         function(name) {
-          _superc.apply(this, arguments);
+          _super.constructor.apply(this, arguments);
         },
 
         'methods', {

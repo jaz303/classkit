@@ -14,10 +14,11 @@ Class.prototype.lateBoundMethod = function(name) {
 
 Class.extend = function(fn) {
 
-  var features = fn ? fn(this, this.prototype) : [function() {}];
+  var features = fn ? fn(this.prototype) : [function() {}];
   
   var ctor = features[0];
   ctor.prototype = Object.create(this.prototype);
+  ctor.prototype.constructor = ctor;
   
   ctor.extend = this.extend;
   ctor.Features = Object.create(this.Features);

@@ -34,17 +34,27 @@ t("superconstructor", function(assert) {
         ];
     });
 
-    var B = A.extend(function(_sc, _sm) {
+    var B = A.extend(function(_super) {
         return [
             function(foo) {
-                _sc.call(this, foo);
+                _super.constructor.call(this, foo);
             }
         ]
     });
 
-    var b = new B('moose')
+    var C = B.extend(function(_super) {
+        return [
+            function(foo, bar) {
+                _super.constructor.call(this, foo);
+                this.bar = bar;
+            }
+        ]
+    });
 
-    assert.equal(b.foo, 'moose');
+    var c = new C('moose', 'hunter');
+
+    assert.equal(c.foo, 'moose');
+    assert.equal(c.bar, 'hunter');
 
 });
 
@@ -60,13 +70,13 @@ t("methods", function(assert) {
         ];
     });
 
-    var B = A.extend(function(_sc, _sm) {
+    var B = A.extend(function(_super) {
         return [
-            function(name) { _sc.call(this, name); },
+            function(name) { _super.constructor.call(this, name); },
             'methods', {
                 getName: function() { return this.name.toUpperCase(); },
                 greet: function() {
-                    return _sm.greet.call(this).replace('hello', 'AWRITE');
+                    return _super.greet.call(this).replace('hello', 'AWRITE');
                 }
             }
         ];

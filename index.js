@@ -14,7 +14,18 @@ Class.prototype.lateBoundMethod = function(name) {
 
 Class.extend = function(fn) {
 
-  var features = fn ? fn(this.prototype) : [function() {}];
+  var features;
+
+  if (fn) {
+    // backwards compatibility
+    if (fn.length > 1) {
+      features = fn(this, this.prototype);
+    } else {
+      features = fn(this.prototype);
+    }
+  } else {
+    features = [function() {}];
+  }
   
   var ctor = features[0];
   ctor.prototype = Object.create(this.prototype);

@@ -24,7 +24,7 @@ t("constructor", function(assert) {
 
 });
 
-t("superconstructor", function(assert) {
+t("superconstructor - single arg callback", function(assert) {
 
     var A = Class.extend(function() {
         return [
@@ -58,7 +58,41 @@ t("superconstructor", function(assert) {
 
 });
 
-t("methods", function(assert) {
+t("superconstructor - 2 arg callback", function(assert) {
+
+    var A = Class.extend(function() {
+        return [
+            function(foo) {
+                this.foo = foo;
+            }
+        ];
+    });
+
+    var B = A.extend(function(_sc, _sm) {
+        return [
+            function(foo) {
+                _sc.call(this, foo);
+            }
+        ]
+    });
+
+    var C = B.extend(function(_sc, _sm) {
+        return [
+            function(foo, bar) {
+                _sc.call(this, foo);
+                this.bar = bar;
+            }
+        ]
+    });
+
+    var c = new C('moose', 'hunter');
+
+    assert.equal(c.foo, 'moose');
+    assert.equal(c.bar, 'hunter');
+
+});
+
+t("methods - single arg callback", function(assert) {
 
     var A = Class.extend(function() {
         return [
@@ -77,6 +111,37 @@ t("methods", function(assert) {
                 getName: function() { return this.name.toUpperCase(); },
                 greet: function() {
                     return _super.greet.call(this).replace('hello', 'AWRITE');
+                }
+            }
+        ];
+    });
+
+    var b = new B('Jason');
+
+    assert.equal(b.getName(), 'JASON');
+    assert.equal(b.greet(), 'AWRITE JASON');
+
+});
+
+t("methods - 2 arg callback", function(assert) {
+
+    var A = Class.extend(function() {
+        return [
+            function(name) { this.name = name; },
+            'methods', {
+                getName: function() { return this.name; },
+                greet: function() { return "hello " + this.getName() }
+            }
+        ];
+    });
+
+    var B = A.extend(function(_sc, _sm) {
+        return [
+            function(name) { _sc.call(this, name); },
+            'methods', {
+                getName: function() { return this.name.toUpperCase(); },
+                greet: function() {
+                    return _sm.greet.call(this).replace('hello', 'AWRITE');
                 }
             }
         ];

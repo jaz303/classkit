@@ -24,6 +24,19 @@ t("constructor", function(assert) {
 
 });
 
+t("_super is assigned to child constructor", function(assert) {
+
+    var A = Class.extend(function() { return [ function() {} ] });
+    var B = A.extend(function() { return [ function() {} ] });
+
+    assert.equal(A._super, Class);
+    assert.equal(B._super, A);
+    assert.equal(B._super._super, Class);
+
+    assert.end();
+
+});
+
 t("superconstructor - single arg callback", function(assert) {
 
     var A = Class.extend(function() {

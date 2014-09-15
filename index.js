@@ -28,6 +28,7 @@ Class.extend = function(fn) {
   }
   
   var ctor = features[0];
+  ctor._super = this;
   ctor.prototype = Object.create(this.prototype);
   ctor.prototype.constructor = ctor;
   

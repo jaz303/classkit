@@ -40,7 +40,10 @@ Class.extend = function(fn) {
   }
 
   for (var k in this.Features) {
-    this.Features[k].finalize(ctor, this);
+    var finalize = this.Features[k].finalize;
+    if (finalize) {
+      finalize(ctor, this);  
+    }
   }
   
   return ctor;

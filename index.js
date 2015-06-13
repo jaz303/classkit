@@ -47,6 +47,7 @@ Class.extend = function(fn) {
   
 };
 
+
 Class.Features = {
   methods: {
     apply: function(ctor, methods, superClass) {
@@ -79,6 +80,35 @@ Class.Features = {
     }
   }
 };
+
+var HOOK_KEY = (typeof Symbol === 'undefined')
+                ? 'classkit__hooks'
+                : new Symbol('hooks');
+
+Class.Features.hooks = {
+  apply: function(ctor, hooks, superClass) {
+    var allHooks = ctor[HOOK_KEY] || (ctor[HOOK_KEY] = {});
+    for (var k in hooks) {
+      var theseHooks = allHooks[k] || (allHooks[k] = []);
+      theseHooks.push(hooks[k]);
+    }
+  },
+  finalize: function(ctor, superClass) {
+    var allHooks = ctor[HOOK_KEY];
+    if (!allHooks) return;
+    for (var k in allHooks) {
+      (function(name, list, sup) {
+        var len = list.length;
+        ctor.prototype[name] = function() {
+          if (sup) sup.apply(this, arguments);
+          for (var i = 0; i < len; ++i) {
+            list[i].apply(this, arguments);
+          }
+        }
+      })(k, allHooks[k], superClass.prototype[k]);
+    }
+  }
+}
 
 function makeDelegate(member, method) {
   return function() {

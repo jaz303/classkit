@@ -38,6 +38,10 @@ Class.extend = function(fn) {
   for (var i = 1; i < features.length; i += 2) {
     this.Features[features[i]].apply(ctor, features[i+1], this);
   }
+
+  for (var k in this.Features) {
+    this.Features[k].finalize(ctor, this);
+  }
   
   return ctor;
   
@@ -49,11 +53,15 @@ Class.Features = {
       for (var methodName in methods) {
         ctor.prototype[methodName] = methods[methodName];
       }  
+    },
+    finalize: function(ctor, superClass) {
     }
   },
   properties: {
     apply: function(ctor, properties, superClass) {
       Object.defineProperties(ctor.prototype, properties);
+    },
+    finalize: function(ctor, superClass) {
     }
   },
   delegate: {
@@ -66,6 +74,8 @@ Class.Features = {
           ctor.prototype[methodName] = makeDelegate(target, methodName);
         }
       }
+    },
+    finalize: function(ctor, superClass) {
     }
   }
 };

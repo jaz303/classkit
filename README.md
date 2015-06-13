@@ -96,11 +96,13 @@ Subclasses can define new `Features`. A `Feature` is simply a function that rece
     // a feature receives the new class' constructor function and
     // a parameters object which contains configuration data for
     // the feature
-    PropertyObject.Features.getset = function(ctor, props) {
-      for (var k in props) {
-        makeProperty(ctor.prototype, k, props[k]);
+    PropertyObject.Features.getset = {
+      apply: function(ctor, props) {
+        for (var k in props) {
+          makeProperty(ctor.prototype, k, props[k]);
+        }
       }
-    }
+    };
 
     var Person = PropertyObject.extend(function() {
       return [

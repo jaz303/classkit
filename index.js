@@ -36,7 +36,7 @@ Class.extend = function(fn) {
   ctor.Features = Object.create(this.Features);
     
   for (var i = 1; i < features.length; i += 2) {
-    this.Features[features[i]](ctor, features[i+1]);
+    this.Features[features[i]](ctor, features[i+1], this);
   }
   
   return ctor;

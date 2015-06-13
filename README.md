@@ -80,6 +80,45 @@ Class.extend(function() {
 });
 ```
 
+## Hooks
+
+Hooks can be used to define methods that, when called, will automatically forward to all hooks sharing the same name, all the way down the inheritance tree. Hooks defined in ancestor classes are called first.
+
+```javascript
+A = Class.extend(function() {
+  return [
+
+    function() {},
+
+    'hooks', {
+      componentWillMount: function() {
+        console.log("A::componentWillMount");
+      }
+    }
+
+  ]
+});
+
+B = A.extend(function() {
+  return [
+
+    function() {},
+
+    'hooks', {
+      componentWillMount: function() {
+        console.log("B::componentWillMount");
+      }
+    }
+
+  ]
+});
+
+var b = new B();
+b.componentWillMount();
+// => A::componentWillMount
+//    B::componentWillMount
+```
+
 ## Adding Features
 
 Subclasses can define new `Features`. A `Feature` is simply a function that receives the class constructor and some configuration data as parameters and then effects change on the new class' prototype. Here's an example that auto-generates getters and setters:

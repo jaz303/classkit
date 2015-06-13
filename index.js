@@ -36,7 +36,7 @@ Class.extend = function(fn) {
   ctor.Features = Object.create(this.Features);
     
   for (var i = 1; i < features.length; i += 2) {
-    this.Features[features[i]](ctor, features[i+1], this);
+    this.Features[features[i]].apply(ctor, features[i+1], this);
   }
   
   return ctor;
@@ -44,21 +44,27 @@ Class.extend = function(fn) {
 };
 
 Class.Features = {
-  methods: function(ctor, methods) {
-    for (var methodName in methods) {
-      ctor.prototype[methodName] = methods[methodName];
+  methods: {
+    apply: function(ctor, methods, superClass) {
+      for (var methodName in methods) {
+        ctor.prototype[methodName] = methods[methodName];
+      }  
     }
   },
-  properties: function(ctor, properties) {
-    Object.defineProperties(ctor.prototype, properties);
+  properties: {
+    apply: function(ctor, properties, superClass) {
+      Object.defineProperties(ctor.prototype, properties);
+    }
   },
-  delegate: function(ctor, delegates) {
-    for (var methodName in delegates) {
-      var target = delegates[methodName];
-      if (Array.isArray(target)) {
-        ctor.prototype[methodName] = makeDelegate(target[0], target[1]);
-      } else {
-        ctor.prototype[methodName] = makeDelegate(target, methodName);
+  delegate: {
+    apply: function(ctor, delegates, superClass) {
+      for (var methodName in delegates) {
+        var target = delegates[methodName];
+        if (Array.isArray(target)) {
+          ctor.prototype[methodName] = makeDelegate(target[0], target[1]);
+        } else {
+          ctor.prototype[methodName] = makeDelegate(target, methodName);
+        }
       }
     }
   }

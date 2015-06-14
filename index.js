@@ -1,5 +1,4 @@
 exports.Class = Class;
-
 function Class() {};
   
 Class.prototype.method = function(name) {
@@ -12,32 +11,45 @@ Class.prototype.lateBoundMethod = function(name) {
   return function() { return self[name].apply(self, arguments); }
 }
 
-Class.extend = function(fn) {
-
-  var features;
-
-  if (fn) {
-    // backwards compatibility
-    if (fn.length > 1) {
-      features = fn(this, this.prototype);
-    } else {
-      features = fn(this.prototype);
-    }
+Class.extend = function(feats) {
+  if (!feats) {
+    feats = [function() {}];
   } else {
-    features = [function() {}];
+    if (typeof feats === 'function') {
+      feats = (feats.length > 1) ? feats(this, this.prototype) : feats(this.prototype);
+    }
+    feats = flatten(feats, true);
   }
-  
-  var ctor = features[0];
+
+  var ctor = feats[0];
+
   ctor._super = this;
   ctor.prototype = Object.create(this.prototype);
   ctor.prototype.constructor = ctor;
   
   ctor.extend = this.extend;
   ctor.Features = Object.create(this.Features);
-    
-  for (var i = 1; i < features.length; i += 2) {
-    this.Features[features[i]].apply(ctor, features[i+1], this);
+
+  function flatten(thing, ctor) {
+    if (Array.isArray(thing)) return thing;
+    var list = ctor ? [thing.construct || function() {}] : [];
+    for (var k in thing) {
+      if (k !== 'construct') list.push(k, thing[k]);
+    }
+    return list;
   }
+
+  (function _applyFeatures(list, start) {
+    for (var i = start; i < list.length; i += 2) {
+      if (list[i] === 'mixin') {
+        _applyFeatures(flatten(list[i+1], false), 0);
+      } else if(list[i] === 'mixins') {
+        list[i+1].forEach(function(m) { _applyFeatures(flatten(m, false), 0); });
+      } else {
+        ctor.Features[list[i]].apply(ctor, list[i+1], this);
+      }
+    }  
+  })(feats, 1);
 
   for (var k in this.Features) {
     var finalize = this.Features[k].finalize;
@@ -47,9 +59,7 @@ Class.extend = function(fn) {
   }
   
   return ctor;
-  
 };
-
 
 Class.Features = {
   methods: {
@@ -57,15 +67,11 @@ Class.Features = {
       for (var methodName in methods) {
         ctor.prototype[methodName] = methods[methodName];
       }  
-    },
-    finalize: function(ctor, superClass) {
     }
   },
   properties: {
     apply: function(ctor, properties, superClass) {
       Object.defineProperties(ctor.prototype, properties);
-    },
-    finalize: function(ctor, superClass) {
     }
   },
   delegate: {
@@ -78,11 +84,16 @@ Class.Features = {
           ctor.prototype[methodName] = makeDelegate(target, methodName);
         }
       }
-    },
-    finalize: function(ctor, superClass) {
     }
   }
 };
+
+function makeDelegate(member, method) {
+  return function() {
+    var target = this[member];
+    return target[method].apply(target, arguments);
+  }
+}
 
 var HOOK_KEY = (typeof Symbol === 'undefined')
                 ? 'classkit__hooks'
@@ -110,12 +121,5 @@ Class.Features.hooks = {
         }
       })(k, allHooks[k], superClass.prototype[k]);
     }
-  }
-}
-
-function makeDelegate(member, method) {
-  return function() {
-    var target = this[member];
-    return target[method].apply(target, arguments);
   }
 }

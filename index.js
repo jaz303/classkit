@@ -97,7 +97,7 @@ function makeDelegate(member, method) {
 
 var HOOK_KEY = (typeof Symbol === 'undefined')
                 ? 'classkit__hooks'
-                : new Symbol('hooks');
+                : Symbol('hooks');
 
 Class.Features.hooks = {
   apply: function(ctor, hooks, superClass) {
